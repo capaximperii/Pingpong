@@ -1,0 +1,18 @@
+<div>
+    <h3 style="text-align: center"> Tournament </h3>
+    <div class="alert alert-success">
+        <strong ng-show="message">{{message}}</strong>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th ng-repeat='player in players'>{{player.name}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player in player">
+                <td>{{player.status}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
