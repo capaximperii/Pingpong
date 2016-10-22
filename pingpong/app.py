@@ -59,6 +59,7 @@ def authentication(app, user_model):
 
     @login_manager.user_loader
     def load_user(uid):
+        print "#################333", uid
         return user_model.find_by_uid(uid)
 
     @login_manager.token_loader

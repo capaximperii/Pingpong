@@ -22,7 +22,7 @@ class Player(UserMixin):
         Player.Db.append(self)
 
     @classmethod
-    def find_by_identity(cls, identity):
+    def find_by_username(cls, username):
         """
         Find a player by username.
 
@@ -31,7 +31,7 @@ class Player(UserMixin):
         :return: Player instance
         """
         for player in Player.Db:
-            if player.username == identity:
+            if player.username == username:
                 return player
         return None
 
@@ -61,10 +61,18 @@ class Player(UserMixin):
 
     def authenticated(self, password):
         """
-        Ensure a user is authenticated, and optionally check their password.
+        Authenticate by checking their password.
 
-        :param password: Optionally verify this as their password
+        :param password:  password for the user
         :type password: str
         :return: bool
         """
         return self.password == password
+
+    def get_id(self):
+        """
+        Overrides flask_login get_id method
+
+        :return: int
+        """
+        return self.uid
