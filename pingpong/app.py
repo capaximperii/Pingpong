@@ -1,10 +1,11 @@
 from flask import Flask
 from pingpong.blueprints.page import page
 from pingpong.blueprints.player import player
+from pingpong.blueprints.game import game
 from pingpong.blueprints.player.models import Player
 from itsdangerous import URLSafeTimedSerializer
-
 from pingpong.extensions import login_manager
+import math
 
 def create_app(settings_override=None):
     """
@@ -23,6 +24,7 @@ def create_app(settings_override=None):
 
     app.register_blueprint(page)
     app.register_blueprint(player)
+    app.register_blueprint(game)
 
     extensions(app)
     authentication(app, Player)
@@ -37,7 +39,11 @@ def extensions(app):
     :return: None
     """
     # Initialize the players db from settings list
-    for uid, username in app.config['PLAYERS'].iteritems():
+    players = app.config['PLAYERS']
+    # The number of players have to be a power of 2.
+    assert math.log(len(players), 2).is_integer()
+
+    for uid, username in players.iteritems():
         defense = app.config['DEFENSE'][uid]
         p = Player(username=username, password=username, uid=uid, defense=10 )
 
@@ -59,11 +65,11 @@ def authentication(app, user_model):
 
     @login_manager.user_loader
     def load_user(uid):
-        print "#################333", uid
         return user_model.find_by_uid(uid)
 
     @login_manager.token_loader
     def load_token(token):
+        print "##################################"
         duration = app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
         serializer = URLSafeTimedSerializer(app.secret_key)
 

@@ -2,6 +2,7 @@ import sys
 import requests
 import json
 import time
+import random
 
 URL = "http://localhost:8000"
 
@@ -11,9 +12,6 @@ class UserSession:
 		self.password = password
 		self.session = requests.session()
 		self.payload = self.session.get(URL)
-		self.objectiveId = None
-		self.quizId = None
-		self.level = None
 
 	def authenticate(self):
 		self.payload = self.session.post(URL + "/api/authentication",
@@ -22,100 +20,38 @@ class UserSession:
 							)
 		if self.payload.status_code != 200:
 			print "Failed to authenticate"
-			return False
-		print self.payload
-		return True
+			raise Exception("Wrong credentials, failed to authenticate")
+
+		print "Authenticated to the server."
+		return self.payload.json()
 
 	def keepalive(self):
-		data = {}
-		self.payload = self.session.put(URL + "/api/keepalive",
-			data = json.dumps(data),
-			headers={"Content-Type": "application/json;charset=UTF-8"})
+		self.payload = self.session.get(URL + "/api/keepalive")
+		if self.payload.status_code != 200:
+			return None
+		return self.payload.json()
+
+	def checkgame(self):
+		self.payload = self.session.get(URL + "/api/checkgame")
 		if self.payload.status_code != 200:
 			return False
-		return True
+		return self.payload.json()
 
-	def getObjectiveId(self):
-		objectiveId = None
-		self.payload = self.session.get("http://localhost:8082/api/objectives")
-		dashboard = self.payload.json()
-		for objective in dashboard:
-			if objective['name'] == 'African capitals':
-				objectiveId =  objective['id']
-				break
-		self.objectiveId = objectiveId
-		return objectiveId
+	def attack(self, gid):
+		number_picked = random.randrange(1, 11)
+		self.payload = self.session.put(URL + "/api/attack/" + str(gid),
+					data={	"number_picked": 	number_picked })
+		return self.payload.json()
 
-	def getFirstObjectiveLevelForQuiz(self, objectiveId):
-		firstLevel = None
-		self.payload = self.session.get(URL + "/api/objectives/" + str(objectiveId))
-		levels = self.payload.json()['objectiveLevels']
-		firstLevel = 0
-		for l in levels:
-			firstLevel = l['id']
-			break
-		self.level = firstLevel
-		return firstLevel
+	def defend (self, gid, n):
+		number_picked = []
+		for i in range(0, n):
+			number_picked.append(random.randrange(1, 11))
 
-	def startQuiz(self, objectiveId, level):
-		data = {"objective":{"id": str(objectiveId)},"objectiveLevel":{"id":str(level)}}
-		self.payload = self.session.post( URL + "/api/quizs",
-			data = json.dumps(data),
-			headers={"Referer": URL, "Content-Type": "application/json;charset=UTF-8"})
-		quiz = self.payload.json()
-		quizId = quiz['id'];
-		self.quizId = quizId
-		return quizId
+		self.payload = self.session.put(URL + "/api/defend/" + str(gid),
+					data={	"number_picked": 	json.dumps(number_picked) })
+		return self.payload.json()
 
-	def simulateQuizResponse(self, quizId):
-		counter = 0
-		while True:
-			self.payload = self.session.get(URL + "/api/quizs/" + str(quizId))
-			if self.payload.status_code != 200:
-				print "ERROR: Quiz: ", str(quizId), "RETURNED: ",self.payload.status_code,"DETAIL: ", self.payload.text
-				break
-			quizSteps = self.payload.json()['quizSteps']
-			step = quizSteps[0]
-			objectiveQuestion = step['objectiveQuestion']
-			startTime = step['startTime']
-			quizType = step['type']
-			rank = step['rank']
-			quizForm = step['quizForm']
-			data = { "quizForm": None,"id": step['id'],
-					 "type": quizType, "rank": rank,
-					 "startTime": startTime,
-					 "endTime": startTime,
-					 "objectiveQuestion": objectiveQuestion }
-
-			if step['type'] == "PRESENTATION":
-				pass # This is a presentation step
-			elif step['type'] == "TESTING":
-				answerInput = quizForm['answerInput']
-				choices = answerInput['choices']
-				answerInput["selectedChoice"] = choices[0]
-				answerInput["@type"] = "com.henoida.business.object.quiz.testing.answer.MultipleChoicesInput"
-				answerInput["testMethod"] = "MULTIPLE_CHOICE"
-				answerdata = { 
-						 	"answerInput":  answerInput,
-						 	"submitted": True,
-						 }
-				self.payload = self.session.put(URL + '/api/quizForms',
-					data = json.dumps(answerdata),
-					headers={"Referer": URL, "Content-Type": "application/json;charset=UTF-8"})
-					#print self.payload.text
-			elif step['type'] == "CONGRATULATIONS":
-				print "SUCCESS: ",step['type'],"for user", self.username
-				break
-			else:
-				print "ERROR: Quiz: ", str(quizId), "RETURNED: ",self.payload.status_code,"DETAIL: ", self.payload.text
-				break
-			self.payload = self.session.put(URL + '/api/quizSteps',
-				data = json.dumps(data),
-				headers={"Referer": URL, "Content-Type": "application/json;charset=UTF-8"})
-			if self.payload.status_code == 404:
-				print "ERROR: Quiz: ", str(quizId), "RETURNED: ",self.payload.status_code,"DETAIL: ", self.payload.text
-			elif self.payload.status_code != 201:
-				print "ERROR: Quiz: ", str(quizId), "RETURNED: ",self.payload.status_code,"DETAIL: ", self.payload.text
-			 	break
-			time.sleep(1)
-	
+	def logout(self):
+		self.payload = self.session.get(URL + "/api/logout")
+		return self.payload.json()

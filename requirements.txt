@@ -1,6 +1,6 @@
 Flask==0.10.1
 
-# Application server for both development and production.
+# Application server.
 gunicorn==19.4.5
 
 # Testing and static analysis.

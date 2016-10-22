@@ -20,3 +20,5 @@ PLAYERS = 	{
 DEFENSE = 	[ 0, 8, 8, 7, 7, 6, 6, 5, 5  ]
 
 REMEMBER_COOKIE_DURATION = timedelta(days=90)
+
+MAX_SCORE = 5
