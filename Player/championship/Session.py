@@ -6,7 +6,7 @@ import random
 
 URL = "http://localhost:8000"
 
-class UserSession:
+class Player:
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
@@ -55,3 +55,28 @@ class UserSession:
 	def logout(self):
 		self.payload = self.session.get(URL + "/api/logout")
 		return self.payload.json()
+
+	
+	def play(self):
+		response = self.authenticate()
+
+		while True:
+			print response
+			command = response['cmd']
+			if command  == 'keepalive':
+				response = self.keepalive()
+			elif command == 'checkgame':
+				response = self.checkgame()
+			elif command == 'attack':
+				gid = response['gid']
+				response = self.attack(gid)
+			elif command == 'defend':
+				defense = response['defense']
+				gid = response['gid']
+				response = self.defend(gid, defense)
+			elif command == 'logout':
+				response = self.logout()
+				break
+			else:
+				break
+			time.sleep(1)
