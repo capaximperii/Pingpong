@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" Game Model
+
+This module provides the Game model as used in the application.
+ 
+"""
+
 from enum import Enum
 from flask import current_app
 
@@ -45,9 +52,24 @@ class Game():
 		return None
 
 	def user_can_play(self, player):
+		"""
+		Checks if user allowed to play.
+
+		:param player: object
+		:type identity: Player
+		:return: bool
+		"""
 		return player in self.players and self.state != State.finished
 
 	def can_attack(self, player):
+		"""
+		Checks if user allowed to attack.
+
+		:param player: object
+		:type identity: Player
+		:return: bool
+		"""
+
 		index = 0
 		for p in self.players:
 			if player.uid == p.uid:
@@ -57,6 +79,13 @@ class Game():
 		return False
 
 	def can_defend(self, player):
+		"""
+		Checks if user allowed to defend.
+
+		:param player: object
+		:type identity: Player
+		:return: bool
+		"""
 		index = 0
 		for p in self.players:
 			if player.uid == p.uid:
@@ -66,6 +95,12 @@ class Game():
 		return False
 
 	def get_round_winner(self):
+		"""
+		Gets winner of the current round at max score reached.
+
+		:return: player or None
+		:type player: Player
+		"""
 		max_score = current_app.config['MAX_SCORE']
 		if max_score in self.scores:
 			index = self.scores.index(max_score)
@@ -79,23 +114,59 @@ class Game():
 
 	@classmethod
 	def get_tournament_winner(cls):
+		"""
+		Gets the final winner
+			to be called after tournament is finished
+
+		:return: player
+		:type:	Player
+		"""
 		finalgame = Game.Db[-1]
 		return finalgame.winner
 
 	def set_state_finished(self):
+		"""
+		Sets state of current game to finished
+
+		:return: void
+		"""
 		self.state = State.finished
 
 	def set_state_defensive(self):
+		"""
+		Sets state of current game to defensive
+
+		:return: void
+		"""
 		self.state = State.defensive
 
 	def set_state_offensive(self):
+		"""
+		Sets state of current game to offensive
+
+		:return: void
+		"""
 		self.state = State.offensive
 
 	def set_offense_move(self, move):
+		"""
+		Sets offense move of current game
+		
+		:param move: object
+		:type move: int
+		:return: void
+		"""
 		self.offensive_move = move
-		self.state = State.defensive
+		self.set_state_defensive()
 
 	def set_defense_move(self, move):
+		"""
+		Sets defense move of current game
+		
+		:param move: object
+		:type move: list of int
+		:return: void
+		"""
 		self.defensive_move = move
 		offensive_player_index = self.roles.index(State.offensive)
 		defensive_player_index = self.roles.index(State.defensive)
@@ -105,7 +176,7 @@ class Game():
 			self.scores[defensive_player_index] += 1
 			self.roles[defensive_player_index] = State.offensive
 			self.roles[offensive_player_index] = State.defensive
-		self.state = State.offensive
+		self.set_state_offensive
 
 	def get_id(self):
 		"""

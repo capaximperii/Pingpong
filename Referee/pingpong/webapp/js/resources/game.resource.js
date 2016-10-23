@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('AF')
-    .factory('AlertsResource', function ($resource) {
-        return $resource('/api/alerts/:id', {}, {
+    .factory('GameResource', function ($resource) {
+        return $resource('/api/gamestatus', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
                 method: 'GET',

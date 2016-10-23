@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+""" Player views handler
+
+This module provides the API endpoints for the player module API endpoints
+to be accessed by the Players to log in and to check their status between 
+game play.
+
+"""
+
 from flask import Blueprint, request, jsonify
 from flask_login import (
 	login_required,
@@ -20,6 +29,12 @@ round_number = 1
 @player.route('/api/authentication', methods=['POST'])
 @anonymous_required()
 def login_do():
+	"""
+	API for authentication
+	
+	:return: 200 on success
+	"""
+
 	resp = jsonify(error="Unauthorized",message="Authentication failed", cmd="authentication"), 401
 	username = request.form.get('username')
 	password = request.form.get('password')
@@ -34,12 +49,24 @@ def login_do():
 @player.route('/api/logout')
 @login_required
 def logout_do():
+	"""
+	API for logging out
+	
+	:return: 200 on success
+	"""
+
 	logout_user()
 	return jsonify (message="Logged out", cmd='finished'), 200
 
 @player.route('/api/keepalive', methods=['GET'])
 @login_required
 def keepalive_do():
+	"""
+	API for polling while waiting for game state to change 
+	or other users to log in
+	
+	:return: 200 on success
+	"""
 	global round_number
 
 	if not is_everyone_here() == True:

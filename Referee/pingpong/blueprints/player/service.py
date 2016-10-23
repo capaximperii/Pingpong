@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" Player service handler
+
+This module provides the player services for the business logic to be used by
+model and views.
+ 
+"""
 import math
 import random
 
@@ -9,6 +16,7 @@ def is_everyone_here():
 	"""
 	Checks if all players have logged in.
 
+	:return: bool
 	"""
 	for player in Player.Db:
 		if player.state == 	State.notarrived:
@@ -18,7 +26,11 @@ def is_everyone_here():
 
 def draw_next_round(round_num):
 	"""
-		Update player states to the next round.
+	Update player states to the next round.
+
+	:param round_num: round number in the tournament
+	:type identity: int
+	:return: size of next draw	
 	"""
 	max_rounds = int(math.log(len(Player.Db), 2))
 	winning_players = []

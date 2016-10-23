@@ -1,17 +1,23 @@
 <div>
     <h3 style="text-align: center"> Tournament </h3>
-    <div class="alert alert-success">
-        <strong ng-show="message">{{message}}</strong>
-    </div>
     <table class="table">
         <thead>
             <tr>
-                <th ng-repeat='player in players'>{{player.name}}</th>
+                <th>Round</th>
+                <th>Draw</th>
+                <th>player 1 score</th>
+                <th>player 2 score</th>
+                <th>Winner</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="player in player">
-                <td>{{player.status}}</td>
+            <tr ng-repeat="game in games">
+                <td>{{game.round }}</td>
+                <td>{{game.p0 + ' vs ' + game.p1 }} </td>
+                <td>{{game.s0}}</td>
+                <td>{{game.s1}}</td>
+                <td ng-if='game.state == true'>{{game.winner}}</td>
+                <td ng-if='game.state == false'> Still running </td>
             </tr>
         </tbody>
     </table>

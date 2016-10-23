@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" Player Model
+
+This module describes the Player model used.
+ 
+"""
+
 from enum import Enum
 from flask_login import UserMixin
 
@@ -87,6 +94,7 @@ class Player(UserMixin):
 		"""
 		Disable a player once he loses
 
+		:return: void
 		"""
 		self.state = State.lost
 
@@ -94,6 +102,7 @@ class Player(UserMixin):
 		"""
 		Set a player to waiting
 
+		:return: void
 		"""
 		self.state = State.waiting
 
@@ -102,5 +111,6 @@ class Player(UserMixin):
 		"""
 		Has a player lost
 
+		:return: bool
 		"""
 		return self.state == State.lost

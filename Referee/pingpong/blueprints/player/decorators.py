@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+""" Decorators
+
+This module provides the common code used as decorators, to be 
+used by Game and Player views.
+
+"""
+
 from functools import wraps
 from flask import redirect
 from flask_login import current_user

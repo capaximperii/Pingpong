@@ -33,50 +33,5 @@ app.config(function ($stateProvider) {
 					controller: 'alertsCtrl'
 				}
 			}
-		})
-		.state('manage', {
-			parent: 'menubar-page',
-			url: '/manage',
-			views: {
-				'content@': {
-					templateUrl: '/html/manage.html',
-					controller: 'manageCtrl'
-				}
-			}
-		}).state('rule', {
-			parent: 'menubar-page',
-			url: '/rule',
-			views: {
-				'content@': {
-					templateUrl: '/html/rule.html',
-					controller: 'ruleCtrl'
-				}
-			}
-		}).state('signature', {
-			parent: 'menubar-page',
-			url: '/signature',
-			views: {
-				'content@': {
-					templateUrl: '/html/signature.html',
-					controller: 'signatureCtrl'
-				}
-			}
-		}).state('settings', {
-			parent: 'menubar-page',
-			url: '/settings',
-			views: {
-				'content@': {
-					templateUrl: '/html/settings.html',
-					controller: 'settingsCtrl'
-				}
-			}
-		}).state('help', {
-			parent: 'menubar-page',
-			url: '/help',
-			views: {
-				'content@': {
-					templateUrl: '/html/help.html',
-				}
-			}
 		});
 	});
