@@ -8,8 +8,7 @@ Install dependencies for `pingpong Referee` using pip:
 
 The app uses gunicorn WSGI. To run `pingpong Referee`:
 
-    $ gunicorn -b 0.0.0.0:8000 --access-logfile - "pingpong.app:create_app()"
-
+    $ gunicorn -b 0.0.0.0:8000 "pingpong.app:create_app()"
 
 
 ## Settings
