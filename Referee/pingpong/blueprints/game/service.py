@@ -76,7 +76,7 @@ def build_report():
 		round_num = 1
 		for game in games:
 			if game['round'] > round_num:
-				f.write("#################################\n\n")
+				f.write("\n\n")
 				round_num = game['round']
 			f.write( 'Game-id: ' + str(game['gid']) )
 			f.write( '  Round: ' + str(game['round']) )
