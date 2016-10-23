@@ -1,30 +1,22 @@
-Setup:
-======
+### Pingpong Player Get Started
 
-Requires python 2.7x installed.
-Additionally the requests module should be installed as given here:
+## Run Application Player
+Install dependencies for `pingpong Player` using pip:
 
-	http://docs.python-requests.org/en/master/user/install/#install
+    $ cd Player
+    $ pip install -r requirements.txt
 
+The app is standalone and can be simply run using:
 
-Database:
-=========
-
-It is recommended to first run the script to add users:
-
-# sh scripts/generate_db_script.sh
-
-Enter the number of users to test for. The script will automatically update the local database. 
+    $ python PlayPingPong --username `username`
 
 
-How to run?
-===========
-# sh scripts/run_simulation.sh
+## Settings
 
-	Answer the question about the approximate number of concurrent threads to create.
+Settings can be edited in the file `config/players.ini`
 
-Additional tuning?
-==================
-
-UserSession.py: Change the URL variable to point to your server / port
-
+* The following settings are used by the application:
+    - `username` the name of the player, used as login and case sensitive
+    - `password` the password for player login, currently same as user name on the server
+    - `defense` an integer representing length of defense array
+    - `url` to which this application will register for tournament.() 
