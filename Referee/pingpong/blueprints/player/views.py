@@ -20,13 +20,12 @@ round_number = 1
 @player.route('/api/authentication', methods=['POST'])
 @anonymous_required()
 def login_do():
-	resp = jsonify(error="Unauthorized",message="Authentication failed", cmd="authentication")
-	status = 401
+	resp = jsonify(error="Unauthorized",message="Authentication failed", cmd="authentication"), 401
 	username = request.form.get('username')
 	password = request.form.get('password')
 	u = Player.find_by_username(username=username)
 
-	if u and u.authenticated(password=password):
+	if u and u.authenticated(password=password) == True:
 		if login_user(u):
 			u.set_waiting_state()
 			resp = jsonify(message="Player logged in", cmd = "keepalive"), 200
