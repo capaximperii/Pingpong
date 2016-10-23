@@ -93,6 +93,7 @@ class Game():
 
 	def set_offense_move(self, move):
 		self.offensive_move = move
+		self.state = State.defensive
 
 	def set_defense_move(self, move):
 		self.defensive_move = move
@@ -104,6 +105,7 @@ class Game():
 			self.scores[defensive_player_index] += 1
 			self.roles[defensive_player_index] = State.offensive
 			self.roles[offensive_player_index] = State.defensive
+		self.state = State.offensive
 
 	def get_id(self):
 		"""
