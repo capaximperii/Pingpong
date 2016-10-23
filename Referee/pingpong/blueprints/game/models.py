@@ -176,7 +176,7 @@ class Game():
 			self.scores[defensive_player_index] += 1
 			self.roles[defensive_player_index] = State.offensive
 			self.roles[offensive_player_index] = State.defensive
-		self.set_state_offensive
+		self.set_state_offensive()
 
 	def get_id(self):
 		"""
