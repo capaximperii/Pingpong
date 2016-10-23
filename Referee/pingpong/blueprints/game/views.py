@@ -5,7 +5,8 @@ This module provides the API endpoints for the game module API endpoints
 to be accessed by the Players as well as dashboard status data.
 
 TODO:
-	Check when a tournament is actually completed? 
+	1. Check when a tournament is actually completed?
+	2. Move view code to service.
 """
 
 import json
@@ -16,6 +17,8 @@ from flask_login import (
 
 from pingpong.blueprints.game.models import Game, State
 from pingpong.blueprints.game.service import get_game_for_user
+from pingpong.blueprints.game.service import dump_game_data
+
 
 game = Blueprint('game', __name__)
 
@@ -99,20 +102,7 @@ def gamestatus_do():
 
 	:return: 200 on success
 	"""
-	games = Game.Db
-	data = []
-	for g in games:
-		p0 = g.players[0].username
-		p1 = g.players[1].username
-
-		s0 = g.scores[0]
-		s1 = g.scores[1]
-
-		gdata = {'gid': g.gid, 'state': g.state == State.finished, 'round': g.round,
-			'p0': p0, 'p1': p1, 's0': s0, 's1': s1}
-		if g.winner != None:
-			gdata['winner'] = g.winner.username
-		data.append(gdata) 
+	data = dump_game_data() 
 	resp = jsonify(data=data)
 	return resp, 200
 

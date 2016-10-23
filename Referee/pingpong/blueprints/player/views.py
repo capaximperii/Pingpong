@@ -21,6 +21,7 @@ from pingpong.blueprints.game.models import Game
 from pingpong.blueprints.player.service import is_everyone_here
 from pingpong.blueprints.player.service import draw_next_round
 from pingpong.blueprints.game.service import are_games_pending
+from pingpong.blueprints.game.service import build_report
 
 player = Blueprint('player', __name__)
 
@@ -83,6 +84,7 @@ def keepalive_do():
 	 	if n == 0:
 	 		winner = Game.get_tournament_winner()
 			resp = jsonify(message="Tournament winner " + winner.username, cmd="logout"), 200
+			build_report()
 		else:
 			round_number += 1
 			resp = jsonify(message="New rounds drawn", cmd="checkgame"), 200
