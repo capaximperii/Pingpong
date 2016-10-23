@@ -44,8 +44,7 @@ def extensions(app):
     assert math.log(len(players), 2).is_integer()
 
     for uid, username in players.iteritems():
-        defense = app.config['DEFENSE'][uid]
-        p = Player(username=username, password=username, uid=uid, defense=10 )
+        p = Player(username=username, password=username, uid=uid)
 
     login_manager.init_app(app)
 
@@ -61,19 +60,6 @@ def authentication(app, user_model):
     :type user_model: DB model, which in our case is in application memory
     :return: None
     """
-    # login_manager.login_view = '/'
-
     @login_manager.user_loader
     def load_user(uid):
         return user_model.find_by_uid(uid)
-
-    @login_manager.token_loader
-    def load_token(token):
-        print "##################################"
-        duration = app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
-        serializer = URLSafeTimedSerializer(app.secret_key)
-
-        data = serializer.loads(token, max_age=duration)
-        user_uid = data[0]
-
-        return user_model.find_by_uid(user_uid)
