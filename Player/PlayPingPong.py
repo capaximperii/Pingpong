@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+""" PlayPingPing script
+
+This module provides the player script to play pingpong with Referee webapp.
+ 
+"""
+
 from championship import Player
 from ConfigParser import ConfigParser
 import getopt

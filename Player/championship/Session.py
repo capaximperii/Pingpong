@@ -1,3 +1,11 @@
+
+# -*- coding: utf-8 -*-
+""" Player session
+
+This module implements player logic for a tournament session.
+ 
+"""
+
 import sys
 import requests
 import json
@@ -16,6 +24,11 @@ class Player:
 		self.payload = self.session.get(url)
 
 	def authenticate(self):
+		"""
+		Authenticate against the server
+
+		:return: server response
+		"""		
 		self.payload = self.session.post(self.url + "/api/authentication",
 							data={	"username": 	self.username ,
 									"password":	self.password}
@@ -28,12 +41,24 @@ class Player:
 		return self.payload.json()
 
 	def keepalive(self):
+		"""
+		Checks tournament state with the server.
+
+		:return: server response
+		"""		
+
 		self.payload = self.session.get(self.url + "/api/keepalive")
 		if self.payload.status_code != 200:
 			return None
 		return self.payload.json()
 
 	def checkgame(self):
+		"""
+		Checks game state with the server
+
+		:return: server response
+		"""		
+
 		self.payload = self.session.get(self.url + "/api/checkgame")
 		if self.payload.status_code != 200:
 			return False
@@ -46,6 +71,13 @@ class Player:
 		return self.payload.json()
 
 	def defend (self, gid):
+		"""
+		Send defense array to the server
+
+		:param identity: gid is game id 
+		:type identity: int 
+		:return: server response
+		"""		
 		number_picked = []
 		for i in range(0, self.defense):
 			# Game rules mention nothing about duplicate numbers in defense.
@@ -56,13 +88,24 @@ class Player:
 		return self.payload.json()
 
 	def logout(self):
+		"""
+		Logout and end session with the server.
+
+		:return: server response
+		"""		
+
 		self.payload = self.session.get(self.url + "/api/logout")
 		return self.payload.json()
 
 	
 	def play(self):
-		response = self.authenticate()
+		"""
+		Plays the game with server as per rules given.
 
+		:return: server response
+		"""		
+
+		response = self.authenticate()
 		while True:
 			print response
 			command = response['cmd']
