@@ -33,7 +33,7 @@ def defend_do(gid):
 		if winner != None:
 			game.set_state_finished()
 			if winner.get_id() != current_user.get_id():
-				resp = (jsonify(message='You lost', cmd='logout'), 200)
+				resp = (jsonify(message='You have lost', cmd='logout'), 200)
 			else:
 				resp = (jsonify(message='You won this round', cmd='keepalive'), 200)
 		else:
@@ -50,19 +50,16 @@ def checkgame_do():
 	game = get_game_for_user(current_user)
 
 	if current_user.has_lost():
-		resp = jsonify(message="You have lost", cmd="logout"), 200
+		resp = jsonify(message="You lost", cmd="logout"), 200
 	elif not game:
 		resp = jsonify(message="You won this round", cmd="keepalive"), 200
 	else:
 		if not game.user_can_play(current_user):
 			resp = (jsonify(message='Invalid game', cmd='keepalive'), 400)			
 		elif game.can_defend(current_user):
-			resp = jsonify(message="Defend", cmd="defend", 
-				size=current_user.defense, gid=game.get_id(), 
-				defense=current_user.defense), 200
+			resp = jsonify(message="Defend", cmd="defend", gid=game.get_id()), 200
 		elif game.can_attack(current_user):
-			resp = jsonify(message="Attack", cmd="attack", 
-				size=1, gid=game.get_id(), defense=current_user.defense), 200
+			resp = jsonify(message="Attack", cmd="attack", gid=game.get_id()), 200
 		else:
 			resp = (jsonify(message='Wait for turn', cmd='keepalive'), 200)
 	return resp

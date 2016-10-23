@@ -28,8 +28,6 @@ class Game():
 		self.defensive_move = None
 		self.winner = None
 		self.loser = None
-		# self.player1.current_game = self
-		# self.player2.current_game = self
 		Game.Db.append(self)
 
 	@classmethod
@@ -104,8 +102,8 @@ class Game():
 			self.scores[offensive_player_index] += 1
 		else:
 			self.scores[defensive_player_index] += 1
-			self.roles[defensive_player_index].role = State.offensive
-			self.roles[offensive_player_index].role = State.defensive
+			self.roles[defensive_player_index] = State.offensive
+			self.roles[offensive_player_index] = State.defensive
 
 	def get_id(self):
 		"""

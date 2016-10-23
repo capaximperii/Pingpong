@@ -17,12 +17,11 @@ class Player(UserMixin):
 	"""
 	Db = []
 	
-	def __init__(self, uid, username, password, defense, **kwargs):
+	def __init__(self, uid, username, password, **kwargs):
 		# Call  constructor.
 		super(Player, self).__init__(**kwargs)
 		self.uid = uid
 		self.username = username
-		self.defense = defense
 		self.password = password
 		self.state = State.notarrived
 		self.current_game = None
