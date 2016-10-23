@@ -13,6 +13,8 @@ def app():
     params = {
         'DEBUG': False,
         'TESTING': True,
+        'PLAYERS' :   { 1: 'Joey', 2: 'Nick' },
+        'MAX_SCORE': 2
     }
 
     _app = create_app(settings_override=params)
